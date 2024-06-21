@@ -3,7 +3,9 @@ package ru.kuyamaks.projects.library.dao.book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.kuyamaks.projects.library.dao.reader.ReaderRowMapper;
 import ru.kuyamaks.projects.library.models.Book;
+import ru.kuyamaks.projects.library.models.Reader;
 
 import java.util.List;
 
@@ -37,5 +39,23 @@ public class BookDAO {
 
     public void delete(int bookId) {
         jdbcTemplate.update("DELETE FROM book WHERE id = ?", bookId);
+    }
+
+    public void assignBook(int readerId, int bookId) {
+        jdbcTemplate.update("UPDATE book SET reader_id = ? WHERE id = ?", readerId, bookId);
+    }
+
+    public void freeBook(int bookId) {
+        jdbcTemplate.update("UPDATE book SET reader_id = NULL WHERE id = ?", bookId);
+    }
+
+    public Reader getReader(int bookId) {
+        Book book = show(bookId);
+        if (book == null || book.getReaderId() == 0) {
+            return null;
+        }
+
+        return jdbcTemplate.query("SELECT * FROM reader WHERE id = ?", new ReaderRowMapper(), book.getReaderId())
+                .stream().findAny().orElse(null);
     }
 }
