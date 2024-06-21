@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kuyamaks.projects.library.dao.book.BookDAO;
+import ru.kuyamaks.projects.library.dao.reader.ReaderDAO;
 import ru.kuyamaks.projects.library.models.Book;
+import ru.kuyamaks.projects.library.models.Reader;
 
 import javax.validation.Valid;
 
@@ -29,6 +31,7 @@ public class BookController {
     @GetMapping("/{id}")
     public String show(Model model, @PathVariable("id") int bookId) {
         model.addAttribute("book", bookDAO.show(bookId));
+        model.addAttribute("reader", bookDAO.getReader(bookId));
         return "books/show";
     }
 
@@ -68,5 +71,17 @@ public class BookController {
     public String deleteBook(@PathVariable("id") int bookId) {
         bookDAO.delete(bookId);
         return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assignBook(@PathVariable("id") int bookId, @ModelAttribute("reader") Reader reader) {
+        bookDAO.assignBook(reader.getId(), bookId);
+        return "redirect:/books/" + bookId;
+    }
+
+    @PatchMapping("/{id}/free")
+    public String freeBook(@PathVariable("id") int bookId) {
+        bookDAO.freeBook(bookId);
+        return "redirect:/books/" + bookId;
     }
 }
