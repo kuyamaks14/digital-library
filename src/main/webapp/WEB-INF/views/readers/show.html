@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Reader page</title>
 </head>
 <body>
-
+<p th:text="${reader.getFullName() + ', ' + reader.getBirthYear()}">Full name</p>
+<div th:if="${books.isEmpty()}">
+    <p>The reader has not taken any books</p>
+</div>
+<hr/>
+<div th:if="${!books.isEmpty()}">
+    <h4>Books:</h4>
+    <li th:each="book : ${books}">
+        <span th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getPublicationYear()}"></span>
+    </li>
+    <hr/>
+</div>
+<br/>
+<form th:method="GET" th:action="@{/readers}">
+    <input type="submit" value="Back"/>
+</form>
+<br/>
+<form th:method="GET" th:action="@{/readers/{id}/edit(id=${reader.getId()})}">
+    <input type="submit" value="Edit"/>
+</form>
+<br/>
+<form th:method="DELETE" th:action="@{/readers/{id}(id=${reader.getId()})}">
+    <input type="submit" value="Delete"/>
+</form>
 </body>
 </html>
