@@ -1,5 +1,7 @@
 package ru.kuyamaks.projects.library.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 public class Book {
@@ -12,20 +14,21 @@ public class Book {
     @NotEmpty(message = "Author should not be empty")
     private String author;
 
-    @NotEmpty(message = "Publication year should not be empty")
-    private String publicationYear;
+    @Min(value = 1500, message = "Publication year should be greater than 1700")
+    @Max(value = 2020, message = "Publication year should be less than 2024")
+    private int publicationYear;
 
     public Book() {
     }
 
-    public Book(int id, String title, String author, String publicationYear) {
+    public Book(int id, String title, String author, int publicationYear) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
     }
 
-    public Book(int id, int readerId, String title, String author, String publicationYear) {
+    public Book(int id, int readerId, String title, String author, int publicationYear) {
         this.id = id;
         this.readerId = readerId;
         this.title = title;
@@ -57,11 +60,11 @@ public class Book {
         this.author = author;
     }
 
-    public String getPublicationYear() {
+    public int getPublicationYear() {
         return publicationYear;
     }
 
-    public void setPublicationYear(String publicationYear) {
+    public void setPublicationYear(int publicationYear) {
         this.publicationYear = publicationYear;
     }
 
