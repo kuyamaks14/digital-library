@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kuyamaks.projects.library.dao.reader.ReaderDAO;
 import ru.kuyamaks.projects.library.models.Reader;
+import ru.kuyamaks.projects.library.util.ReaderValidator;
 
 import javax.validation.Valid;
 
@@ -14,10 +15,12 @@ import javax.validation.Valid;
 @RequestMapping("/readers")
 public class ReaderController {
     private ReaderDAO readerDAO;
+    private ReaderValidator readerValidator;
 
     @Autowired
-    public ReaderController(ReaderDAO readerDAO) {
+    public ReaderController(ReaderDAO readerDAO, ReaderValidator readerValidator) {
         this.readerDAO = readerDAO;
+        this.readerValidator = readerValidator;
     }
 
     @GetMapping
@@ -41,6 +44,8 @@ public class ReaderController {
 
     @PostMapping
     public String createReader(@ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
+        readerValidator.validate(reader, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "readers/new";
         }
@@ -57,6 +62,8 @@ public class ReaderController {
 
     @PatchMapping("/{id}")
     public String updateReader(@PathVariable("id") int readerId, @ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
+        readerValidator.validate(reader, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "readers/edit";
         }

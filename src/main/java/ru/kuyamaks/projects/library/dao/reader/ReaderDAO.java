@@ -8,6 +8,7 @@ import ru.kuyamaks.projects.library.models.Book;
 import ru.kuyamaks.projects.library.models.Reader;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ReaderDAO {
@@ -23,7 +24,8 @@ public class ReaderDAO {
     }
 
     public Reader show(int readerId) {
-        return jdbcTemplate.query("SELECT * FROM reader WHERE id = ?", new ReaderRowMapper(), readerId).stream().findAny().orElse(null);
+        return jdbcTemplate.query("SELECT * FROM reader WHERE id = ?", new ReaderRowMapper(), readerId)
+                .stream().findAny().orElse(null);
     }
 
     public void save(Reader reader) {
@@ -42,5 +44,10 @@ public class ReaderDAO {
 
     public List<Book> getBooks(int readerId) {
         return jdbcTemplate.query("SELECT * FROM book WHERE reader_id = ?", new BookRowMapper(), readerId);
+    }
+
+    public Optional<Reader> findByFullName(String fullName) {
+        return jdbcTemplate.query("SELECT * FROM reader WHERE full_name = ?", new ReaderRowMapper(), fullName)
+                .stream().findAny();
     }
 }
