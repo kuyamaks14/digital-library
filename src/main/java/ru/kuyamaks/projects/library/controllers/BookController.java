@@ -16,10 +16,12 @@ import javax.validation.Valid;
 @RequestMapping("/books")
 public class BookController {
     private BookDAO bookDAO;
+    private ReaderDAO readerDAO;
 
     @Autowired
-    public BookController(BookDAO bookDAO) {
+    public BookController(BookDAO bookDAO, ReaderDAO readerDAO) {
         this.bookDAO = bookDAO;
+        this.readerDAO = readerDAO;
     }
 
     @GetMapping
@@ -31,7 +33,9 @@ public class BookController {
     @GetMapping("/{id}")
     public String show(Model model, @PathVariable("id") int bookId) {
         model.addAttribute("book", bookDAO.show(bookId));
-        model.addAttribute("reader", bookDAO.getReader(bookId));
+        model.addAttribute("reader", readerDAO.show(bookDAO.getReaderIdByBookId(bookId)));
+        model.addAttribute("new_reader", new Reader());
+        model.addAttribute("readers", readerDAO.index());
         return "books/show";
     }
 

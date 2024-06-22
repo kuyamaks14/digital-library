@@ -23,8 +23,7 @@ public class ReaderDAO {
     }
 
     public Reader show(int readerId) {
-        return jdbcTemplate.query("SELECT * FROM reader WHERE id = ?", new ReaderRowMapper(), readerId)
-                .stream().findAny().orElse(null);
+        return jdbcTemplate.query("SELECT * FROM reader WHERE id = ?", new ReaderRowMapper(), readerId).stream().findAny().orElse(null);
     }
 
     public void save(Reader reader) {
