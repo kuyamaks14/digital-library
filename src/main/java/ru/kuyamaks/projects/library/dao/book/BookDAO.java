@@ -23,7 +23,8 @@ public class BookDAO {
     }
 
     public Book show(int bookId) {
-        return jdbcTemplate.query("SELECT * FROM book WHERE id = ?", new BookRowMapper(), bookId).stream().findAny().orElse(null);
+        return jdbcTemplate.query("SELECT * FROM book WHERE id = ?", new BookRowMapper(), bookId)
+                .stream().findAny().orElse(null);
     }
 
     public void save(Book book) {
